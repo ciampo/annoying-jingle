@@ -1,6 +1,6 @@
 {
   "name": "annoying-jingle",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "homepage": "https://github.com/ciampo/annoying-jingle",
   "description": "An element that plays annoying jingles",
   "main": "annoying-jingle.html",
