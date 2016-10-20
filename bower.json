@@ -1,0 +1,34 @@
+{
+  "name": "annoying-jingle",
+  "version": "0.0.1",
+  "homepage": "https://github.com/ciampo/annoying-jingle",
+  "description": "An element that plays annoying jingles",
+  "main": "annoying-jingle.html",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ciampo/annoying-jingle.git"
+  },
+  "keywords": [
+    "web-components",
+    "polymer",
+    "jingle"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.4.0",
+    "paper-toast": "PolymerElements/paper-toast#^1.3.0"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.0.0",
+    "web-component-tester": "^4.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
+  }
+}

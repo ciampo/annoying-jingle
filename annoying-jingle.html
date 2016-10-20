@@ -1,0 +1,84 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-toast/paper-toast.html">
+
+<!--
+`annoying-jingle`
+An element that plays annoying jingles
+
+@demo demo/index.html
+-->
+
+<dom-module id="annoying-jingle">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+
+    <audio id="audio"
+        src="[[_computeSource(jingle)]]"
+        autoplay
+        loop></audio>
+
+    <paper-toast id="toast"
+        text="You wish you could stop it! One more time..."></paper-toast>
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'annoying-jingle',
+
+      properties: {
+        /*
+         * Jingle song; Can be:
+         * - polymer
+         * - crash
+         */
+        jingle: {
+          type: String,
+          value: 'polymer'
+        }
+      },
+
+      _firstAudioLoop: true,
+
+      attached: function() {
+        Polymer.RenderStatus.afterNextRender(this, function() {
+          this.listen(this.$.audio, 'playing', '_onAudioPlaying');
+        });
+      },
+
+      detached: function() {
+        this.$.audio.pause();
+        this.unlisten(this.$.audio, 'playing', '_onAudioPlaying');
+      },
+
+      _onAudioPlaying: function(e) {
+        if (this._firstAudioLoop) {
+          this._firstAudioLoop = false;
+          return;
+        }
+
+        this._openToast();
+      },
+
+      _computeSource: function(jingle) {
+        switch(jingle) {
+          case 'polymer':
+            return 'polymersummit.mp3';
+          case 'crash':
+            return 'crashbandicoot.mp3';
+          default:
+            return '';
+        }
+      },
+
+      _openToast: function() {
+        console.log('open toast');
+        this.$.toast.open();
+      }
+    });
+  </script>
+</dom-module>
