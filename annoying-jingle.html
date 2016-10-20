@@ -1,6 +1,8 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../paper-toast/paper-toast.html">
 
+<script src="https://connect.soundcloud.com/sdk/sdk-3.1.2.js"></script>
+
 <!--
 `annoying-jingle`
 An element that plays annoying jingles
@@ -15,11 +17,6 @@ An element that plays annoying jingles
         display: block;
       }
     </style>
-
-    <audio id="audio"
-        src="[[_computeSource(jingle)]]"
-        autoplay
-        loop></audio>
 
     <paper-toast id="toast"
         text="You wish you could stop it! One more time..."></paper-toast>
@@ -38,40 +35,37 @@ An element that plays annoying jingles
          */
         jingle: {
           type: String,
-          value: 'polymer'
+          value: 'polymer',
+          observer: '_onJingleChanged'
         }
       },
 
-      _firstAudioLoop: true,
-
-      attached: function() {
-        Polymer.RenderStatus.afterNextRender(this, function() {
-          this.listen(this.$.audio, 'playing', '_onAudioPlaying');
+      _initialiseSC: function() {
+        SC.initialize({
+          client_id: '042c1f6ff5de6c128b775fd74fa3a9a7'
         });
       },
 
-      detached: function() {
-        this.$.audio.pause();
-        this.unlisten(this.$.audio, 'playing', '_onAudioPlaying');
+      _streamSC: function(trackId) {
+        this._initialiseSC();
+        SC.stream('/tracks/' + trackId).then(function(player) {
+          console.log(player);
+          player.on('finish', (function(p) {
+            return function() {
+              p.seek(0);
+              p.play();
+              this._openToast();
+            }.bind(this);
+          }.bind(this))(player));
+          player.play();
+        }.bind(this));
       },
 
-      _onAudioPlaying: function(e) {
-        if (this._firstAudioLoop) {
-          this._firstAudioLoop = false;
-          return;
-        }
-
-        this._openToast();
-      },
-
-      _computeSource: function(jingle) {
-        switch(jingle) {
-          case 'polymer':
-            return 'polymersummit.mp3';
-          case 'crash':
-            return 'crashbandicoot.mp3';
-          default:
-            return '';
+      _onJingleChanged: function(jingle) {
+        if (jingle === 'polymer') {
+          this._streamSC('289167462');
+        } else if (jingle === 'crash') {
+          this._streamSC('289167465');
         }
       },
 
